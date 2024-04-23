@@ -77,15 +77,23 @@ Will be coming soon.
 ```
 Will be coming soon.
 ```
-The complete code of our paper will be released, if our paper is accepted for publication.
+The complete code of our paper will be released.
 
 If you have any questions, you can contact us: Jiang long, hnzzyxlj@163.com and Mengmeng Li, mli@fzu.edu.cn.
+
+### Semantic change detection datasets: 
+
+SECOND dataset: https://drive.google.com/file/d/1QlAdzrHpfBIOZ6SK78yHF2i1u6tikmBc/view
+HRSCD dataset: https://ieee-dataport.org/open-access/hrscd-high-resolution-semantic-change-detection-dataset#files
+We also release a Fuzhou non-cropland dataset provided by our partner Haihan Lin: https://drive.google.com/file/d/1SlTw3jKr3cE6d3i5XYQhzylG0geMzNZW/view?usp=sharing
 
 ### Acknowledgements: 
 
 We are very grateful for these excellent works [CLCFormer](https://github.com/long123524/CLCFormer), [PVT](https://github.com/whai362/PVT), and [Bi-SRNet](https://github.com/ggsDing/Bi-SRNet), etc., which have provided the basis for our framework.
 
 ### Citation:
+If you find this work useful or interesting, please consider citing the following references.
 ```
-This paper has been submitted to "ISPRS Journal of Photogrammetry and Remote Sensing"
+[1] Long J, Li M,  Wang X, et.al. Semantic change detection using a hierarchical semantic graph interaction network from high-resolution remote sensing images. ISPRS Journal of Photogrammetry and Remote Sensing, 2024, 211:318-335.
+[2] Lin H, Wang X, Li M, et al. A Multi-Task Consistency Enhancement Network for Semantic Change Detection in HR Remote Sensing Images and Application of Non-Agriculturalization. Remote Sensing, 2023, 15(21): 5106.
 ```
