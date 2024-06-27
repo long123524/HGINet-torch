@@ -8,30 +8,27 @@ import matplotlib.pyplot as plt
 from skimage.transform import rescale
 from torchvision.transforms import functional as F
 # from osgeo import gdal_array
-import cv2
 
+num_classes = 7
+ST_COLORMAP = [[255,255,255], [0,0,255], [128,128,128], [0,128,0], [0,255,0], [128,0,0], [255,0,0]]
+ST_CLASSES = ['unchanged', 'water', 'ground', 'low vegetation', 'tree', 'building', 'playgrounds']
 
-# num_classes = 6
-# ST_COLORMAP = [[128,128,128], [255,0,0], [250,250,150], [150,250,150], [0,255,0], [0,0,255]]
-# ST_CLASSES = ['unchanged', 'artificial surfaces', 'agricultural areas', 'forests', 'wetlands', 'water']
+MEAN_A = np.array([113.40, 114.08, 116.45])
+STD_A  = np.array([48.30,  46.27,  48.14])
+MEAN_B = np.array([111.07, 114.04, 118.18])
+STD_B  = np.array([49.41,  47.01,  47.94])
+root = r'D:\LJ\Bi-SRNet-main\sensetime_change_detection_train'
+
+# num_classes = 7
+# ST_COLORMAP = [[255,255,255], [0,0,255], [128,128,128], [0,128,0], [0,255,0], [128,0,0], [255,0,0]]
+# ST_CLASSES = ['unchanged', 'water', 'ground', 'low vegetation', 'tree', 'building', 'sports field']
 #
 # MEAN_A = np.array([113.40, 114.08, 116.45])
 # STD_A  = np.array([48.30,  46.27,  48.14])
 # MEAN_B = np.array([111.07, 114.04, 118.18])
 # STD_B  = np.array([49.41,  47.01,  47.94])
 #
-# root = r'D:\LJ2\HRSCD_data'
-
-num_classes = 7
-ST_COLORMAP = [[255,255,255], [0,0,255], [128,128,128], [0,128,0], [0,255,0], [128,0,0], [255,0,0]]
-ST_CLASSES = ['unchanged', 'water', 'ground', 'low vegetation', 'tree', 'building', 'sports field']
-
-MEAN_A = np.array([113.40, 114.08, 116.45])
-STD_A  = np.array([48.30,  46.27,  48.14])
-MEAN_B = np.array([111.07, 114.04, 118.18])
-STD_B  = np.array([49.41,  47.01,  47.94])
-
-root = r'D:\LJ2\sensetime_change_detection_train'
+# root = r'E:\cropland\exprimet_data\FZ_SCD'
 
 
 colormap2label = np.zeros(256 ** 3)
@@ -91,7 +88,7 @@ def read_RSimages(mode, rescale=False):
     count = 0
     for it in data_list:
         # print(it)
-        if (it[-4:]=='.png'):
+        if (it[-4:]=='.tif') or (it[-4:]=='.png'):
             img_A_path = os.path.join(img_A_dir, it)
             img_B_path = os.path.join(img_B_dir, it)
             label_A_path = os.path.join(label_A_dir, it)
@@ -102,6 +99,8 @@ def read_RSimages(mode, rescale=False):
             
             label_A = io.imread(label_A_path)
             label_B = io.imread(label_B_path)
+            label_A = np.uint8(label_A)
+            label_B = np.uint8(label_B)
             #for rgb labels:
             #label_A = Color2Index(label_A)
             #label_B = Color2Index(label_B)
@@ -130,9 +129,9 @@ class Data(data.Dataset):
         img_B = io.imread(self.imgs_list_B[idx])
         img_B = normalize_image(img_B, 'B')
         label_A = self.labels_A[idx]
-       # label_A = np.array(label_A,dtype='uint8')
+        # label_A = np.array(label_A, dtype='uint8') ##HRSCD data
         label_B = self.labels_B[idx]
-      #  label_B = np.array(label_B, dtype='uint8')
+        # label_B = np.array(label_B, dtype='uint8')  ###HRSCD data
         if self.random_flip:
             img_A, img_B, label_A, label_B = transform.rand_rot90_flip_MCD(img_A, img_B, label_A, label_B)
         return F.to_tensor(img_A), F.to_tensor(img_B), torch.from_numpy(label_A), torch.from_numpy(label_B)
@@ -149,7 +148,7 @@ class Data_test(data.Dataset):
         imgB_dir = os.path.join(test_dir, 'im2')
         data_list = os.listdir(imgA_dir)
         for it in data_list:
-            if (it[-4:]=='.png'):
+            if (it[-4:]=='.tif') or (it[-4:]=='.png'):
                 img_A_path = os.path.join(imgA_dir, it)
                 img_B_path = os.path.join(imgB_dir, it)
                 self.imgs_A.append(io.imread(img_A_path))

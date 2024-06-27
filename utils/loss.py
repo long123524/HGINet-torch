@@ -2,6 +2,7 @@ import torch
 import torch.nn.functional as F
 from torch.autograd import Variable
 import torch.nn as nn
+import numpy as np
 # Recommend
 class CrossEntropyLoss2d(nn.Module):
     def __init__(self, weight=None, ignore_index=-1):
@@ -12,25 +13,6 @@ class CrossEntropyLoss2d(nn.Module):
     def forward(self, inputs, targets):
         return self.nll_loss(F.log_softmax(inputs, dim=1), targets)
 
-
-
-
-# this may be unstable sometimes.Notice set the size_average
-def CrossEntropy2d(input, target, weight=None, size_average=False):
-    # input:(n, c, h, w) target:(n, h, w)
-    n, c, h, w = input.size()
-
-    input = input.transpose(1, 2).transpose(2, 3).contiguous()
-    input = input[target.view(n, h, w, 1).repeat(1, 1, 1, c) >= 0].view(-1, c)
-
-    target_mask = target >= 0
-    target = target[target_mask]
-    #loss = F.nll_loss(F.log_softmax(input), target, weight=weight, size_average=False)
-    loss = F.cross_entropy(input, target, weight=weight, size_average=False)
-    if size_average:
-        loss /= target_mask.sum().data[0]
-
-    return loss
     
 def weighted_BCE(output, target, weight_pos=None, weight_neg=None):
     output = torch.clamp(output,min=1e-8,max=1-1e-8)
@@ -116,7 +98,7 @@ class ChangeSimilarity(nn.Module):
     def __init__(self, reduction='mean'):
         super(ChangeSimilarity, self).__init__()
         self.loss_f = nn.CosineEmbeddingLoss(margin=0., reduction=reduction)
-        
+
     def forward(self, x1, x2, label_change):
         b,c,h,w = x1.size()
         x1 = F.softmax(x1, dim=1)
@@ -125,17 +107,32 @@ class ChangeSimilarity(nn.Module):
         x2 = x2.permute(0,2,3,1)
         x1 = torch.reshape(x1,[b*h*w,c])
         x2 = torch.reshape(x2,[b*h*w,c])
-        
+
         label_unchange = ~label_change.bool()
         target = label_unchange.float()
         target = target - label_change.float()
         target = torch.reshape(target,[b*h*w])
-        
+
         loss = self.loss_f(x1, x2, target)
         return loss
 
 
-
+class ChangeSalience(nn.Module):
+    """input: x1, x2 multi-class predictions, c = class_num
+       label_change: changed part
+    """
+    def __init__(self, reduction='mean'):
+        super(ChangeSimilarity, self).__init__()
+        self.loss_f = nn.MSELoss(reduction=reduction)
+        
+    def forward(self, x1, x2, label_change):
+        b,c,h,w = x1.size()
+        x1 = F.softmax(x1, dim=1)[:,0,:,:]
+        x2 = F.softmax(x2, dim=1)[:,0,:,:]
+                
+        loss = self.loss_f(x1, x2.detach()) + self.loss_f(x2, x1.detach())
+        return loss*0.5
+    
 
 def pix_loss(output, target, pix_weight, ignore_index=None):
     # Calculate log probabilities

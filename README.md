@@ -14,7 +14,7 @@ Our study aims to develop an effective multi-task network for SCD from high-reso
 
 ## Using the code:
 
-The code is stable while using Python 3.7.0, CUDA >=11.0
+The code is stable while using Python 3.7, torch 1.10.0, CUDA 11.3
 
 - Clone this repository:
 ```bash
@@ -25,13 +25,14 @@ cd HGINet-torch
 To install all the dependencies using conda or pip:
 
 ```
-PyTorch
+Torch+
 timm
 TensorboardX
 OpenCV
 numpy
 tqdm
 skimage
+timm
 ....
 ```
 
@@ -65,27 +66,30 @@ inputs
     └── ├── ...
 ```
 
-For testing and validation datasets, the same structure as the above.
+For validation and testing datasets, the same structure as the above.
 
 ## Training and testing
 
 1. Train the model.
 ```
-Will be coming soon.
+run train.SCD.py
 ```
-2. Evaluate the results.
+2. Predict the SCD results.
 ```
-Will be coming soon.
+run pred_SCD.py
 ```
-The complete code of our paper will be released.
-
-If you have any questions, you can contact us: Jiang long, hnzzyxlj@163.com and Mengmeng Li, mli@fzu.edu.cn.
-
+3. Evaluate the SCD results.
+```
+run Eval_SCD.py
+```
 ### Semantic change detection datasets: 
 
 SECOND dataset: https://drive.google.com/file/d/1QlAdzrHpfBIOZ6SK78yHF2i1u6tikmBc/view
 HRSCD dataset: https://ieee-dataport.org/open-access/hrscd-high-resolution-semantic-change-detection-dataset#files
 We also release a Fuzhou non-cropland dataset provided by our partner Haihan Lin: https://drive.google.com/file/d/1SlTw3jKr3cE6d3i5XYQhzylG0geMzNZW/view?usp=sharing
+
+### Pretrained weight:
+The weight of PVT-V2-B2 pretrained on ImageNet dataset can be downloaded from: https://drive.google.com/file/d/1uzeVfA4gEQ772vzLntnkqvWePSw84F6y/view?usp=sharing
 
 ### Acknowledgements: 
 

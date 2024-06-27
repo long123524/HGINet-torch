@@ -229,8 +229,8 @@ def SCDD_eval_all(preds, labels, num_class):
     change_label_sum = pixel_sum - hist.sum(0)[0].sum()
     change_ratio = change_label_sum/pixel_sum
     SC_TP = np.diag(hist[1:, 1:]).sum()
-    SC_Precision = SC_TP/change_pred_sum
-    SC_Recall = SC_TP/change_label_sum
+    SC_Precision = SC_TP/(change_pred_sum + 0.0002)
+    SC_Recall = SC_TP/(change_label_sum+ 0.0002)
     Fscd = stats.hmean([SC_Precision, SC_Recall])
     return Fscd, IoU_mean, Sek
 
