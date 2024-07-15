@@ -18,7 +18,7 @@ DATA_NAME = 'ST'
 args = {
     'train_batch_size': 16,
     'val_batch_size': 16,
-    'lr': 0.001,
+    'lr': 0.0001,
     'epochs': 80,
     'gpu': True,
     'lr_decay_power': 1.5,
@@ -47,8 +47,8 @@ def main():
     val_loader = DataLoader(val_set, batch_size=args['val_batch_size'], num_workers=4, shuffle=False)
 
     criterion = CrossEntropyLoss2d(ignore_index=0).cuda()
-    optimizer = optim.SGD(filter(lambda p: p.requires_grad, net.parameters()), lr=args['lr'], weight_decay=args['weight_decay'], momentum=args['momentum'], nesterov=False)
-    # optimizer = optim.AdamW(net.parameters(), lr=0.0001)
+    #optimizer = optim.SGD(filter(lambda p: p.requires_grad, net.parameters()), lr=0.001, weight_decay=args['weight_decay'], momentum=args['momentum'], nesterov=False)
+    optimizer = optim.AdamW(net.parameters(), lr=args['lr'])
     # Please consider use the AdamW optimizer with intinal learning of 0.0001 if the detection accuracy is nonideal in a difficult dataset
     # (当在某个数据集上检测精度不理想时考虑使用学习率为0.0001的AdamW优化器)
 
