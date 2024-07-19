@@ -204,7 +204,7 @@ class TC(nn.Module):
         return out1, out2
 
 class HGINet(nn.Module):
-    def __init__(self, channel=32,num_classes=7, pretrained_path=r'D:\SCD\pretrained\pvt_v2_b2.pth', drop_rate = 0.4):
+    def __init__(self, channel=64,num_classes=7, pretrained_path=r'D:\SCD\pretrained\pvt_v2_b2.pth', drop_rate = 0.4):
         super(HGINet, self).__init__()
         self.drop = nn.Dropout2d(drop_rate)
         self.backbone = pvt_v2_b2()  # [64, 128, 320, 512]
