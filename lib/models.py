@@ -221,7 +221,7 @@ class HGINet(nn.Module):
         self.Translayer3_1 = BasicConv2d(480, channel, 3,padding=1)
         self.Translayer4_1 = BasicConv2d(192, channel, 3,padding=1)
 
-        self.Translayer5_1 = BasicConv2d(192, 64, 3,padding=1)
+        self.Translayer5_1 = BasicConv2d(192, channel, 3,padding=1)
         self.Translayer6_1 = BasicConv2d(64, 32, 3,padding=1)
 
         self.Translayers_1 = BasicConv2d(96, 32, 3, padding=1)
